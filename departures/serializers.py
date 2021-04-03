@@ -2,13 +2,13 @@ from .models import Station, Departure
 from rest_framework import serializers
 
 
-class StationSerializer(serializers.HyperlinkedModelSerializer):
+class StationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Station
-        fields = ['name', 'code']
+        fields = '__all__'
 
 
-class DepartureSerializer(serializers.HyperlinkedModelSerializer):
+class DepartureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Departure
-        fields = ['station', 'planned_time', 'direction', 'platform', 'train_type']
+        fields = '__all__'

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'dj_rest_auth',
 ]
 
 MIDDLEWARE = [
@@ -137,5 +138,8 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'departures.renderers.DeparturesAPIRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
 }

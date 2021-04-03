@@ -9,6 +9,8 @@ djangorestframework = "*"
 markdown = "*"
 install = "*"
 django-filter = "*"
+dj-rest-auth = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 

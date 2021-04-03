@@ -26,6 +26,6 @@ class DepartureViewSet(viewsets.ModelViewSet):
     """
     renderer_classes = [DeparturesAPIRenderer]
     versioning_class = DeparturesAPIVersioning
-    queryset = Departure.objects.all().order_by('-planned_time')
+    queryset = Departure.objects.all().order_by('planned_time')
     serializer_class = DepartureSerializer
     # permission_classes = [permissions.IsAuthenticated]
