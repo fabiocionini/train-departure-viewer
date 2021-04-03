@@ -132,3 +132,4 @@ bin/
 
 .idea/
 .DS_Store
+pyvenv.cfg
