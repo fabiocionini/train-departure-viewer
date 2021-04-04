@@ -143,3 +143,25 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ]
 }
+
+# CELERY = {
+#     'BROKER_URL': 'redis://localhost:6379',
+#     'CELERY_BROKER_URL': 'redis://localhost:6379',
+#     'TIMEZONE': 'Europe/Amsterdam'
+# }
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_TIMEZONE = 'Europe/Amsterdam'
+CELERY_BEAT_SCHEDULE = {
+    'update-stations-every-24hrs': {
+       'task': 'departures.tasks.update_stations',
+       'schedule': 3600.0,
+       'args': (),
+    },
+    'update-departures-every-10s': {
+       'task': 'departures.tasks.update_departures',
+       'schedule': 10.0,
+       'args': (),
+    },
+}
+# CELERY_IMPORTS = ("departures.tasks",)

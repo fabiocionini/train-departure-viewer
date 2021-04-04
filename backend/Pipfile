@@ -11,6 +11,9 @@ install = "*"
 django-filter = "*"
 dj-rest-auth = "*"
 djangorestframework-simplejwt = "*"
+redis = "*"
+celery = "*"
+django-celery-beat = "*"
 
 [dev-packages]
 
