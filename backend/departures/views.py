@@ -1,18 +1,10 @@
-from django.shortcuts import render
-
-from django.http import HttpResponse
-from rest_framework import \
-    viewsets, \
-    status
-from rest_framework import permissions
-from rest_framework.response import \
-    Response
+from rest_framework import viewsets, status
+from rest_framework.response import Response
 
 from .models import Station, Departure
 from .renderers import DeparturesAPIRenderer
 from .serializers import StationSerializer, DepartureSerializer
 from .versioning import DeparturesAPIVersioning
-
 
 class StationViewSet(viewsets.ModelViewSet):
     """

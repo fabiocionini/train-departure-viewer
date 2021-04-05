@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dj_rest_auth',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -144,14 +145,20 @@ REST_FRAMEWORK = {
     ]
 }
 
-# CELERY = {
-#     'BROKER_URL': 'redis://localhost:6379',
-#     'CELERY_BROKER_URL': 'redis://localhost:6379',
-#     'TIMEZONE': 'Europe/Amsterdam'
-# }
+DEPARTURES_SETTINGS = {
+    'AUTH_KEY': 'Ocp-Apim-Subscription-Key',
+    'AUTH_VALUE': '9501613007cd41398976a63b0a5bd925',
+    'STATIONS_URL': 'https://gateway.apiportal.ns.nl/reisinformatie-api/api/v2/stations',
+    'DEPARTURES_URL': 'https://gateway.apiportal.ns.nl/reisinformatie-api/api/v2/departures?station={0}',
+    'STATION_NAME': 'Den Haag Centraal',
+    'CONNECT_TIMEOUT': 5.0,
+    'READ_TIMEOUT': 30.0
+}
 
 CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_TIMEZONE = 'Europe/Amsterdam'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_BEAT_SCHEDULE = {
     'update-stations-every-24hrs': {
        'task': 'departures.tasks.update_stations',
@@ -164,4 +171,3 @@ CELERY_BEAT_SCHEDULE = {
        'args': (),
     },
 }
-# CELERY_IMPORTS = ("departures.tasks",)
