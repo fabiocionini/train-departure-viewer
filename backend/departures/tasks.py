@@ -30,28 +30,31 @@ def get_headers():
 @shared_task
 def update_stations(**kwargs):
     logger.info('Updating stations')
-    response = requests.get(cfg['STATIONS_URL'], headers=get_headers(), timeout=(cfg['CONNECT_TIMEOUT'], cfg['READ_TIMEOUT']))
-    if response.status_code == 200:
-        response_obj = response.json()
-        if 'payload' in response_obj:
-            station = next((s for s in response_obj['payload'] if s['namen']['lang'] == cfg['STATION_NAME']), None)
-            if station:
-                try:
-                    model, created = Station.objects.update_or_create(name=station['namen']['lang'],
-                                                                      defaults={
-                                                                         'code': station['code']
-                                                                      })
-                    if created:
-                        logger.info('Station {0} created.'.format(cfg['STATION_NAME']))
-                    else:
-                        logger.info('Station {0} updated.'.format(cfg['STATION_NAME']))
-                except Exception:
-                    logger.error('ERROR: {0}'.format(sys.exc_info()))
-            else:
-                print('Station not found.')
-                logger.error('ERROR: Station not found.')
-    else:
-        logger.error('Connection error: {0}'.format(response.status_code))
+    try:
+        response = requests.get(cfg['STATIONS_URL'], headers=get_headers(), timeout=(cfg['CONNECT_TIMEOUT'], cfg['READ_TIMEOUT']))
+        if response.status_code == 200:
+            response_obj = response.json()
+            if 'payload' in response_obj:
+                station = next((s for s in response_obj['payload'] if s['namen']['lang'] == cfg['STATION_NAME']), None)
+                if station:
+                    try:
+                        model, created = Station.objects.update_or_create(name=station['namen']['lang'],
+                                                                          defaults={
+                                                                             'code': station['code']
+                                                                          })
+                        if created:
+                            logger.info('Station {0} created.'.format(cfg['STATION_NAME']))
+                        else:
+                            logger.info('Station {0} updated.'.format(cfg['STATION_NAME']))
+                    except Exception:
+                        logger.error('ERROR: {0}'.format(sys.exc_info()))
+                else:
+                    print('Station not found.')
+                    logger.error('ERROR: Station not found.')
+        else:
+            logger.error('Connection error: {0}'.format(response.status_code))
+    except Exception:
+        logger.error('Update error: {0}'.format(sys.exc_info()))
 
 
 @shared_task
@@ -60,14 +63,14 @@ def update_departures(**kwargs):
     station = get_default_station()
     if station:
         headers = {cfg['AUTH_KEY']: cfg['AUTH_VALUE'], 'Accept': 'application/json'}
-        response = requests.get(cfg['DEPARTURES_URL'].format(station.code), headers=headers, timeout=(cfg['CONNECT_TIMEOUT'], cfg['READ_TIMEOUT']))
-        if response.status_code == 200:
-            response_obj = response.json()
-            if 'payload' in response_obj:
-                if 'departures' in response_obj['payload']:
-                    departures = response_obj['payload']['departures']
-                    for departure in departures:
-                        try:
+        try:
+            response = requests.get(cfg['DEPARTURES_URL'].format(station.code), headers=headers, timeout=(cfg['CONNECT_TIMEOUT'], cfg['READ_TIMEOUT']))
+            if response and response.status_code == 200:
+                response_obj = response.json()
+                if 'payload' in response_obj:
+                    if 'departures' in response_obj['payload']:
+                        departures = response_obj['payload']['departures']
+                        for departure in departures:
                             model, created = Departure.objects.update_or_create(name=departure['name'],
                                                                                 defaults={
                                                                                     'station': station,
@@ -80,10 +83,11 @@ def update_departures(**kwargs):
                                 logger.info('Departure {0} created.'.format(departure['name']))
                             else:
                                 logger.info('Departure {0} updated.'.format(departure['name']))
-                        except Exception:
-                            logger.error('ERROR: {0}'.format(sys.exc_info()))
-        else:
-            logger.error('Connection error: {0}'.format(response.status_code))
+            else:
+                logger.error('Connection error: {0}'.format(response.status_code))
+        except Exception:
+            logger.error('Update error: {0}'.format(sys.exc_info()))
+
 
 
 @worker_ready.connect()
