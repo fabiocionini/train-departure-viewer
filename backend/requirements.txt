@@ -1,3 +1,0 @@
-#./train-departure-viewer/backend/requirments.txt
-#Packages
-Django==3.1.7
