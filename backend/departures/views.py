@@ -18,7 +18,7 @@ class StationViewSet(viewsets.ModelViewSet):
     versioning_class = DeparturesAPIVersioning
     queryset = Station.objects.all()
     serializer_class = StationSerializer
-    permission_classes = [HasAPIKey & IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def create(self, request, *args, **kwargs):
         model, created = Station.objects.update_or_create(name=request.data['name'],
