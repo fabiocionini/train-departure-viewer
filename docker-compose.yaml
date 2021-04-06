@@ -1,0 +1,101 @@
+#./train-departure-viewer/docker-compose.yml
+version: '3.4'
+
+services:
+    postgres:
+        image: postgres:10-alpine
+        env_file:
+          - ./backend/.env.prod
+        volumes: 
+          - pgdata:/var/lib/postgresql/data
+        networks:
+            - main
+        ports:
+            - "5432:5432"
+        restart: on-failure
+        
+          
+    redis:
+        image: redis:alpine
+        restart: on-failure
+        networks:
+            - main
+    
+    backend:
+        build: ./backend
+        image: backend-image
+        command: sh -c "bash wait-for-it.sh -t 0 postgres:5432 && python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && python manage.py createsuperuser && gunicorn train_departure_viewer.wsgi --user www-data --bind 0.0.0.0:8000 --workers 1"
+        ports:
+            - "8000:8000"
+        env_file:
+            - ./backend/.env.prod
+        networks:
+            - main
+        depends_on:
+            - postgres
+            - redis
+        restart: on-failure
+        volumes:
+            - ./backend/wait-for:/bin/wait-for
+            - ./backend/static_root/:/opt/app/backend/static
+        
+    nginx:
+        command: wait-for backend:8000 -- nginx -g "daemon off;"
+        image: nginx:alpine
+        depends_on:
+            - backend
+        networks:
+            - main
+        ports:
+            - "8080:8080"
+        restart: on-failure
+        volumes:
+            - ./wait-for:/bin/wait-for
+            - ./nginx.conf:/etc/nginx/nginx.conf
+            - ./backend/static_root/:/static
+        
+    celery_worker:
+        command: sh -c "bash wait-for-it.sh -t 0 redis:6379 && bash wait-for-it.sh -t 0 backend:8000 -- celery -A train_departure_viewer worker -l WARNING"
+        depends_on:
+            - backend
+            - postgres
+            - redis
+        env_file:
+            - ./backend/.env.prod
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 50M
+                reservations:
+                    memory: 20M
+        hostname: celery_worker
+        image: backend-image
+        networks:
+            - main
+        restart: on-failure
+
+
+    celery_beat:
+        command: sh -c "bash wait-for-it.sh -t 0 redis:6379 && bash wait-for-it.sh -t 0 backend:8000 -- celery -A train_departure_viewer beat -l WARNING"
+        depends_on:
+            - backend
+            - postgres
+            - redis
+        env_file:
+            - ./backend/.env.prod
+        hostname: celery_beat
+        image: backend-image
+        networks:
+            - main
+        restart: on-failure
+    
+volumes:
+    pgdata:
+    static:
+    
+networks:
+    main:

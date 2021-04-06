@@ -1,4 +1,8 @@
 from rest_framework import viewsets, status
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework_api_key.models import APIKey
+from rest_framework_api_key.permissions import HasAPIKey
+
 from rest_framework.response import Response
 
 from .models import Station, Departure
@@ -14,7 +18,7 @@ class StationViewSet(viewsets.ModelViewSet):
     versioning_class = DeparturesAPIVersioning
     queryset = Station.objects.all()
     serializer_class = StationSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [HasAPIKey & IsAuthenticatedOrReadOnly]
 
     def create(self, request, *args, **kwargs):
         model, created = Station.objects.update_or_create(name=request.data['name'],
@@ -40,7 +44,7 @@ class DepartureViewSet(viewsets.ModelViewSet):
     versioning_class = DeparturesAPIVersioning
     queryset = Departure.objects.all().order_by('planned_time')
     serializer_class = DepartureSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def create(self, request, *args, **kwargs):
         model, created = Departure.objects.update_or_create(name=request.data['name'],

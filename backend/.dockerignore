@@ -1,9 +1,0 @@
-# Ignore everything
-**
-
-# ... except for dependencies and source
-!Pipfile
-!Pipfile.lock
-!train_departure_viewer/
-!departures/
-!manage.py

@@ -16,6 +16,9 @@ celery = "*"
 django-celery-beat = "*"
 django-celery-results = "*"
 requests = "*"
+gunicorn = "*"
+psycopg2 = "*"
+djangorestframework-api-key = "*"
 
 [dev-packages]
 

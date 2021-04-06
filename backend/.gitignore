@@ -133,3 +133,4 @@ bin/
 .idea/
 .DS_Store
 pyvenv.cfg
+/static_root/
