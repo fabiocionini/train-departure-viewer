@@ -1,5 +1,4 @@
-from datetime import \
-    datetime
+from datetime import datetime
 
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
