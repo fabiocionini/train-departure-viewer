@@ -67,7 +67,7 @@ The application retrieves data from the Django REST API every 10 seconds (althou
 All application settings are configurable through the src/environments files (API url, data refresh rate, page cycle rate, boarding time, number of departures per page).
 The view has been developed with responsiveness in mind (rem-based sizes, responsive table).
 
-**Room for improvement**: although the application has been developed with SSR compatibility in mind, it does not currently implement Server Side Rendering.
+**Room for improvement**: although the application has been developed with SSR compatibility in mind, it does not currently implement Server Side Rendering through Angular Universal.
 
 
 ### Server setup
