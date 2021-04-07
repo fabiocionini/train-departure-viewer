@@ -2,3 +2,29 @@
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
+
+//----------------------------------*\
+// Fonts
+//----------------------------------*/
+@import 'assets/fonts/titillium-web/stylesheet.css';
+// primary font
+$primary_font: 'Titillium Web';
+// font-weight
+$thin:100;
+$light:300;
+$regular:400;
+$bold:700;
+$black:900;
+// Font size
+$font-xs:12px;
+$font-sm: 14px;
+$primary-fs: 16px;
+$font-md: 18px;
+$font-lg: 20px;
+body {
+  font-family: $primary_font;
+  font-size: $font-lg;
+  font-weight: $regular;
+  background-color: black;
+  color: white;
+}

@@ -1,3 +1,6 @@
+from datetime import \
+    datetime
+
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework_api_key.models import APIKey
@@ -19,6 +22,7 @@ class StationViewSet(viewsets.ModelViewSet):
     queryset = Station.objects.all()
     serializer_class = StationSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    pagination_class = None
 
     def create(self, request, *args, **kwargs):
         model, created = Station.objects.update_or_create(name=request.data['name'],
@@ -42,9 +46,10 @@ class DepartureViewSet(viewsets.ModelViewSet):
     """
     renderer_classes = [DeparturesAPIRenderer]
     versioning_class = DeparturesAPIVersioning
-    queryset = Departure.objects.all().order_by('planned_time')
+    queryset = Departure.objects.all().filter(planned_time__gte=datetime.now()).order_by('planned_time')
     serializer_class = DepartureSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    pagination_class = None
 
     def create(self, request, *args, **kwargs):
         model, created = Departure.objects.update_or_create(name=request.data['name'],

@@ -1,0 +1,67 @@
+h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  float: left;
+  margin-left: 0.5rem;
+}
+
+h3 {
+  float: right;
+  margin-top: 1.2rem;
+  margin-right: 1rem;
+}
+
+.table-custom {
+  & th {
+    background-color: black;
+    color: #ffa200;
+  }
+
+  & td {
+    background-color: black;
+  }
+}
+
+.footer {
+  text-align: right;
+  font-size: 120%;
+  color: white;
+}
+
+.center {
+  text-align: center;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.0;
+  }
+}
+@-webkit-keyframes blink {
+  50% {
+    opacity: 0.0;
+  }
+}
+
+.blink {
+  width: 1rem;
+  height: 1rem;
+  display: inline-block;
+  background-color: #ffa200;
+  border-radius: 50%;
+  &.even {
+    animation: blink 1s step-start 0s infinite;
+    -webkit-animation: blink 1s step-start 0s infinite;
+  }
+
+  &.odd {
+    animation: blink 1s step-start 0.5s infinite;
+    -webkit-animation: blink 1s step-start 0.5s infinite;
+  }
+}
+
+.page-counter {
+  position: absolute;
+  bottom: 0.25rem;
+  right: 1rem;
+}

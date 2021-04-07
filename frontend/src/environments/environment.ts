@@ -4,8 +4,16 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8000/api/',
-  pageDuration: 10
+  rootUrl: 'http://localhost:8000/',
+  apiPrefix: 'api/',
+  apiKey: 'APIKEY',
+  apiVersion: '1.0',
+  apiMimeType: 'application/vnd.fabiocionini.departures+json',
+  apiAuthorization: false,
+  refreshDataRate: 10,
+  pageCycleRate: 10,
+  boardingTime: 300,
+  departuresPerPage: 10,
 };
 
 /*
