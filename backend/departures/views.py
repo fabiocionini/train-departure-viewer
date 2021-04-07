@@ -21,7 +21,7 @@ class StationViewSet(viewsets.ModelViewSet):
     versioning_class = DeparturesAPIVersioning
     queryset = Station.objects.all()
     serializer_class = StationSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [HasAPIKey | IsAuthenticatedOrReadOnly]
     pagination_class = None
 
     def create(self, request, *args, **kwargs):
@@ -48,7 +48,7 @@ class DepartureViewSet(viewsets.ModelViewSet):
     versioning_class = DeparturesAPIVersioning
     queryset = Departure.objects.all().filter(planned_time__gte=datetime.now()).order_by('planned_time')
     serializer_class = DepartureSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [HasAPIKey | IsAuthenticatedOrReadOnly]
     pagination_class = None
 
     def create(self, request, *args, **kwargs):
